@@ -2,35 +2,35 @@
 
 func.py contains all the required functionalities as listed below:
 
-1.Users write and publish reviews
-
-2.Search business by ratings
-
-3.Search business by type
-
-4.Search rating(????) by date
-
-5.Users can search local area
-
-6.Ability to delete or edit reviews made by users
-
-7.Business wants to update characteristics
-
-8. Search by hours of operation
-
-9. Review that is most useful
-
-10.Search user with highest stars
-
-11.Delete/Update a review
-
-12.Delete a User account
-
-13.Year when most users joined
-
-14.Review that contains “good”, “amazing”
-
-15.Business currently open in particular postal code.
+  1. Write review on a particular business by a registered user.
+  
+	2. Search businesses by ratings(0 - 5).
+  
+	3. Search business by type(Eg. Mexican, Burgers, etc.).
+  
+	4. Get reviews given on a particular date.
+  
+	5. Retrieve business in a particular city and state.
+  
+	6. Delete a particular review made by that user.
+  
+	7. Update characteristics of a business(Eg: Vegan, For Children, Valet Parking, etc.).
+  
+  8. Get list of all elite user in a specified year.
+  
+  9. Fetch review that has received most useful votes.
+  
+	10. Obtain user names who has been rated with highest stars.
+  
+	11. Update the review made by user.
+  
+	12. Deletion of a user account.
+  
+	13. Get top cities by number of business in a city of a particular state.
+  
+	14. Obtain review that contains “good” and “amazing” as a keyword.
+  
+	15. Get list of business currently opened in a particular postal code.
 
 
 main.py asks for input as a number from the options above (1 - 15)
