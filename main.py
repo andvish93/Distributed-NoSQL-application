@@ -7,7 +7,7 @@ if __name__ == "__main__":
 	3. Search business by type
 	4. Search rating(????) by date
 	5. Users can search local area
-	6. Ability to delete or edit reviews made by users
+	6. Ability to delete reviews made by users
 	7. Business wants to update characteristics
 	8. Search by hours of operation
 	9. Review that is most usefu;
@@ -39,9 +39,9 @@ if __name__ == "__main__":
 		elif choice == 4:
 			search_rating_by_date()
 		elif choice == 5:
-			search_local_area_by_user()
+			search_business_by_local_area()
 		elif choice == 6:
-			delete_or_edit_review_by_user()
+			delete_review_by_user()
 		elif choice == 7:
 			update_characteristic_by_business()
 		elif choice == 8:

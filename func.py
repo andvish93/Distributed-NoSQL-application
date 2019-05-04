@@ -14,12 +14,12 @@ def generate_id():
 
 def get_client_db():
 	client = MongoClient("mongodb://127.0.0.1:27017/")
+	# client = MongoClient("ec2-3-14-86-28.us-east-2.compute.amazonaws.com", 27021)
 	db = client.yelpdb
 	return db
 
 def write_publish_review_by_user():
 	(user_id, business_id) = input("Enter space separated valuess: ").split(" ")
-	# client = MongoClient("ec2-3-14-86-28.us-east-2.compute.amazonaws.com", 27021)
 	db = get_client_db()
 
 	count_user = db.userInfo.find({"user_id" : user_id}).count()
@@ -31,7 +31,6 @@ def write_publish_review_by_user():
 	else:
 		text = input("Enter review: ")
 		stars = int(input("Enter no. of stars:(0-5) "))
-		# characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 		while True:
 			review_id = generate_id()
 			count_review = db.reviewInfo.find({"review_id" : review_id}).count()
@@ -96,14 +95,49 @@ def search_rating_by_date():
 	else:
 		print("No review with %s" %date)
 
-def search_local_area_by_user():
-	pass
+def search_business_by_local_area():
+	(city, state) = input("Enter city and state space separated: ").split(" ")
+	db = get_client_db()
+	count_business = db.businessInfo.find({"city": city, "state": state}, {"name": 1}).count()
+	if count_business > 0:
+		print("There are %d business in  city %s and state %s" % (count_business, city, state))
+		cursor = db.businessInfo.find({"city": city, "state": state}, {"name": 1}).limit(15)
+		i = 1
+		for row in cursor:
+			print("%d. %s " % (i, row["name"]))
+			i += 1
+	else:
+		print("No business in  city %s and state %s" % (city, state))
 
-def delete_or_edit_review_by_user():
-	pass
+def delete_review_by_user():
+	(user_id, review_id) = input("Enter space separated values: ").split(" ")
+	db = get_client_db()
+	count_user = db.userInfo.find({"user_id" : user_id}).count()
+	count_review = db.reviewInfo.find({"review_id": review_id}).count()
+	if count_user == 0:
+		print("Invalid User")
+	elif count_review == 0:
+		print("Invalid Review")
+	else:
+		x = db.reviewInfo.delete_one({"review_id": review_id, "user_id": user_id})
+		if x.deleted_count > 0:
+			print("Review deleted successfully")
+		else:
+			print("Error in deleting review...delete review again..!")
 
 def update_characteristic_by_business():
-	pass
+	business_id = input("Enter business_id: ")
+	attr = input("Enter new characteristic: ")
+	db = get_client_db()
+	count_business = db.businessInfo.find({"business_id" : business_id}).count()
+	if count_business == 0:
+		print("Invalid business")
+	else:
+		u = db.businessInfo.update_one({"business_id": business_id}, {"$set": {"attributes."+attr: "true"}})
+		if u is not None:
+			print("Characteristic update successfully")
+		else:
+			print("Error in updating business characteristic...update again...!")	
 
 def search_by_hours_of_operation():
 	pass
