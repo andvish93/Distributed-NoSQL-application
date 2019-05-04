@@ -12,7 +12,7 @@ if __name__ == "__main__":
 	8. Search by hours of operation
 	9. Review that is most usefu;
 	10. Search user with highest stars
-	11. Delete/Update a review
+	11. Update a review
 	12. Delete a User account
 	13. Year when most users joined
 	14. Review that contains “good”, “amazing”
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 		elif choice == 10:
 			search_user_with_highest_star()
 		elif choice == 11:
-			delete_or_update_review()
+			update_review()
 		elif choice == 12:
 			delete_user_account()
 		elif choice == 13:

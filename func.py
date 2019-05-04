@@ -143,13 +143,38 @@ def search_by_hours_of_operation():
 	pass
 
 def get_most_useful_review():
-	pass
+	db = get_client_db()
+	cursor = db.reviewInfo.find({}, {"review_id" : 1}).sort("useful", -1).limit(10)
+	i = 1
+	print("Top Useful review: ")
+	for row in cursor:
+		print("%d. %s %s %s" % (i, row["review_id"], row["stars"], row["text"]))
+		i += 1
+
 
 def search_user_with_highest_star():
-	pass
+	db = get_client_db()
 
-def delete_or_update_review():
-	pass
+	cursor = db.userInfo.find({}, {"name" : 1}).sort("average_stars", -1).limit(10)
+	i = 1
+	print("Top highest star user: ")
+	for row in cursor:
+		print("%d. %s" % (i, row["name"]))
+		i += 1
+
+def update_review():
+	review_id = input("Enter review_id: ")
+	db = get_client_db()
+	count_review = db.reviewInfo.find({"review_id": review_id}).count()
+	if count_review == 0:
+		print("Invalid review id")
+	else:
+		text = input("Enter review: ")
+		cursor = db.reviewInfo.update_one({"review_id": review_id}, {"$set": {"text": text}})
+		if cursor.modified_count > 0:
+			print("Review update successfully...!")
+		else:
+			print("Error in updating review..update again...!")
 
 def delete_user_account():
 	pass
