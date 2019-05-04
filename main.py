@@ -2,22 +2,23 @@ from func import *
 
 if __name__ == "__main__":
 	options_string = '''<-------What would you like to do? Choose from below options---------->
-	1. Users write and publish reviews
-	2. Search business by ratings
-	3. Search business by type
-	4. Search rating(????) by date
-	5. Users can search local area
-	6. Ability to delete reviews made by users
-	7. Business wants to update characteristics
-	8. Search by hours of operation
-	9. Review that is most usefu;
-	10. Search user with highest stars
-	11. Update a review
-	12. Delete a User account
-	13. Year when most users joined
-	14. Review that contains “good”, “amazing”
-	15. Business currently open in particular postal code.
+	1. Write review on a particular business by a registered user.
+	2. Search businesses by ratings(0 - 5).
+	3. Search business by type(Eg. Mexican, Burgers, etc.).
+	4. Get reviews given on a particular date.
+	5. Retrieve business in a particular city and state.
+	6. Delete a particular review made by that user.
+	7. Update characteristics of a business(Eg: Vegan, For Children, Valet Parking, etc.).
+	8. Get list of all elite user in a specified year.
+	9. Fetch review that has received most useful votes.
+	10. Obtain user names who has been rated with highest stars.
+	11. Update the review made by user.
+	12. Deletion of a user account.
+	13. Get top cities by number of business in a city of a particular state.
+	14. Obtain review that contains “good” and “amazing” as a keyword.
+	15. Get list of business currently opened in a particular postal code.
 	16. To exit the menu options'''
+	
 	while True:
 		print(options_string)
 		choice = input("Enter your choice: ")
@@ -31,13 +32,13 @@ if __name__ == "__main__":
 		elif choice not in range(1, 16):
 			print("Wrong Input...!")
 		elif choice == 1:
-			write_publish_review_by_user()
+			write_review_by_user()
 		elif choice == 2:
 			search_business_by_ratings()
 		elif choice == 3:
 			search_business_by_type()
 		elif choice == 4:
-			search_rating_by_date()
+			get_review_by_date()
 		elif choice == 5:
 			search_business_by_local_area()
 		elif choice == 6:
@@ -45,7 +46,7 @@ if __name__ == "__main__":
 		elif choice == 7:
 			update_characteristic_by_business()
 		elif choice == 8:
-			search_by_hours_of_operation()
+			get_elite_user_by_year()
 		elif choice == 9:
 			get_most_useful_review()
 		elif choice == 10:
@@ -55,7 +56,7 @@ if __name__ == "__main__":
 		elif choice == 12:
 			delete_user_account()
 		elif choice == 13:
-			get_year_when_most_user_joined()
+			get_cities_by_no_of_business()
 		elif choice == 14:
 			get_review_good_amazing()
 		elif choice == 15:
