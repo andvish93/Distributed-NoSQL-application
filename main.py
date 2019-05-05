@@ -6,7 +6,7 @@ if __name__ == "__main__":
 	2. Search businesses by ratings(0 - 5).
 	3. Search business by type(Eg. Mexican, Burgers, etc.).
 	4. Get reviews given on a particular date.
-	5. Retrieve business in a particular city and state.
+	5. Retrieve businesses in a particular city and state.
 	6. Delete a particular review made by that user.
 	7. Update characteristics of a business(Eg: Vegan, For Children, Valet Parking, etc.).
 	8. Get list of all elite user in a specified year.
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 	12. Deletion of a user account.
 	13. Get top cities by number of business in a city of a particular state.
 	14. Obtain review that contains “good” and “amazing” as a keyword.
-	15. Get list of business currently opened in a particular postal code.
+	15. Get list of business currently open in a particular postal code.
 	16. To exit the menu options'''
 	
 	while True:

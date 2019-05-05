@@ -14,8 +14,7 @@ def generate_id():
 
 # function to retrieve connection with db
 def get_client_db():
-	client = MongoClient("mongodb://127.0.0.1:27017/")
-	# client = MongoClient("ec2-3-14-86-28.us-east-2.compute.amazonaws.com", 27021)
+	client = MongoClient("ec2-54-215-246-81.us-west-1.compute.amazonaws.com", 27021)
 	db = client.yelpdb
 	return db
 
@@ -33,7 +32,7 @@ def write_review_by_user():
 		print("Business Id does not exist...!")
 	else:
 		text = input("Enter review: ")
-		stars = int(input("Enter no. of stars:(0-5) "))
+		stars = float(input("Enter no. of stars:(0-5) "))
 		while True:
 			review_id = generate_id()
 			count_review = db.reviewInfo.find({"review_id": review_id}).count()
@@ -45,7 +44,7 @@ def write_review_by_user():
 
 		insert_id = db.reviewInfo.insert_one(new_review).inserted_id
 		if insert_id is not None:
-			print("Review added successfully...!")
+			print("Review added successfully...!\nReview Id: %s" % review_id)
 		else:
 			print("Error in adding review...! Add review again...!")
 	print()
@@ -93,13 +92,12 @@ def get_review_by_date():
 	db = get_client_db()
 	regx = re.compile("^"+date, re.IGNORECASE)
 	count_review = db.reviewInfo.find({"date": {'$regex': regx}}).count()
-	print(count_review)
 	if count_review > 0:
 		print("There are %d reviews with date %s." % (count_review, date))
 		cursor = db.reviewInfo.find({"date": {'$regex': regx}}).limit(15)
 		i = 1
 		for row in cursor:
-			print("%d. %s - %d" % (i, row["text"], row["stars"]))
+			print("%d. %s - %d" % (i, row["text"][:100], row["stars"]))
 			i += 1
 	else:
 		print("No review with %s...!" % date)
@@ -126,7 +124,8 @@ def search_business_by_local_area():
 
 # use case 6
 def delete_review_by_user():
-	(user_id, review_id) = input("Enter space separated values: ").split(" ")
+	user_id = input("Enter User Id: ")
+	review_id = input("Enter Review Id: ")
 	db = get_client_db()
 	count_user = db.userInfo.find({"user_id": user_id}).count()
 	count_review = db.reviewInfo.find({"review_id": review_id}).count()
@@ -149,10 +148,13 @@ def update_characteristic_by_business():
 	attr = input("Enter New Characteristic: ")
 	db = get_client_db()
 	count_business = db.businessInfo.find({"business_id": business_id}).count()
+	cursor = db.businessInfo.find({"business_id": business_id}, {"postal_code": 1})
+	for row in cursor:
+		postal_code = row["postal_code"]
 	if count_business == 0:
 		print("Business Id does not exist...!")
 	else:
-		u = db.businessInfo.update_one({"business_id": business_id}, {"$set": {"attributes."+attr: "true"}})
+		u = db.businessInfo.update_one({"postal_code": postal_code,"business_id": business_id}, {"$set": {"attributes."+attr: "True"}})
 		if u is not None:
 			print("Characteristic update successfully...!")
 		else:
@@ -169,7 +171,8 @@ def get_elite_user_by_year():
 	if elite_count == 0:
 		print("No elite user in %d." % year)
 	else:
-		cursor = db.userInfo.find({"elite": {'$regex': regx}}, {"name": 1}).limit(10)
+		print("There are %d elite users." % elite_count)
+		cursor = db.userInfo.find({"elite": {'$regex': regx}}, {"name": 1}).limit(15)
 		i = 1
 		print("Elite user details: ")
 		for row in cursor:
@@ -181,11 +184,11 @@ def get_elite_user_by_year():
 # use case 9
 def get_most_useful_review():
 	db = get_client_db()
-	cursor = db.reviewInfo.find({}, {"review_id": 1}).sort("useful", -1).limit(10)
+	cursor = db.reviewInfo.find({}, {"review_id": 1, "stars": 1, "text": 1}).sort("useful", -1).limit(15)
 	i = 1
-	print("Top Useful review: ")
+	print("Top Useful Reviews: ")
 	for row in cursor:
-		print("%d. %s %s %s" % (i, row["review_id"], row["stars"], row["text"]))
+		print("%d. %s %s %s" % (i, row["review_id"], row["stars"], row["text"][:50]))
 		i += 1
 	print()
 
@@ -194,7 +197,7 @@ def get_most_useful_review():
 def search_user_with_highest_star():
 	db = get_client_db()
 
-	cursor = db.userInfo.find({}, {"name": 1}).sort("average_stars", -1).limit(10)
+	cursor = db.userInfo.find({}, {"name": 1}).sort("average_stars", -1).limit(15)
 	i = 1
 	print("Top highest star user: ")
 	for row in cursor:
@@ -208,11 +211,14 @@ def update_review():
 	review_id = input("Enter review_id: ")
 	db = get_client_db()
 	count_review = db.reviewInfo.find({"review_id": review_id}).count()
+	cursor = db.reviewInfo.find({"review_id": review_id}, {"user_id": 1})
+	for row in cursor:
+		user_id = row["user_id"]
 	if count_review == 0:
 		print("Review Id does not exist...!")
 	else:
 		text = input("Enter review: ")
-		cursor = db.reviewInfo.update_one({"review_id": review_id}, {"$set": {"text": text}})
+		cursor = db.reviewInfo.update_one({"user_id": user_id,"review_id": review_id}, {"$set": {"text": text}})
 		if cursor.modified_count > 0:
 			print("Review update successfully...!")
 		else:
@@ -225,10 +231,13 @@ def delete_user_account():
 	user_id = input("Enter user id: ")
 	db = get_client_db()
 	count_user = db.userInfo.find({"user_id": user_id}).count()
+	cursor = db.userInfo.find({"user_id": user_id}, {"name": 1})
+	for row in cursor:
+		name = row["name"]
 	if count_user == 0:
 		print("User does not exist...!")
 	else:
-		cursor = db.userInfo.delete_one({"user_id": user_id})
+		cursor = db.userInfo.delete_one({"name": name,"user_id": user_id})
 		if cursor.deleted_count == 0:
 			print("Error in deleting user...! Delete again...!")
 		else:
@@ -256,10 +265,10 @@ def get_review_good_amazing():
 	count_review = db.reviewInfo.find({"$or": [{"text": {'$regex': regx1}}, {"text": {'$regex': regx2}}]}).count()
 	if count_review > 0:
 		print("There are %d review that are %s or %s" % (count_review, "good", "amazing"))
-		cursor = db.reviewInfo.find({"$or": [{"text": {'$regex': regx1}}, {"text": {'$regex': regx2}}]}).limit(10)
+		cursor = db.reviewInfo.find({"$or": [{"text": {'$regex': regx1}}, {"text": {'$regex': regx2}}]}).limit(15)
 		i = 1
 		for row in cursor:
-			print("%d. %s " % (i, row["text"]))
+			print("%d. %s " % (i, row["text"][:100]))
 			i += 1
 	else:
 		print("No review that are %s or %s" % ("good", "amazing"))	
