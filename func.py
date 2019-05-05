@@ -73,7 +73,6 @@ def search_business_by_type():
 	db = get_client_db()
 	regx = re.compile(category, re.IGNORECASE)
 	count_business = db.businessInfo.find({"categories": {'$regex': regx}}).count()
-	print(count_business)
 	if count_business > 0:
 		print("There are %d business with category %s." % (count_business, category))
 		cursor = db.businessInfo.find({"categories": {'$regex': regx}}).limit(15)
