@@ -1,4 +1,4 @@
-# cs157c_RateYourExperience
+# Distributed NoSQL application
 
 func.py contains all the required functionalities as listed below:
 
